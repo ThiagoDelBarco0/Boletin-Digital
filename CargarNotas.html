@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notas - Boletín Digital</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="cargarnotas.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="logo.png" alt="Logo" class="logo" />
+      <h1>Carga de Notas - Boletín Digital</h1>
+    </header>
+
+    <main>
+    <form id="buscarAlumno">
+      <label for="dni">Ingrese DNI del Alumno:</label>
+      <input type="number" id="dni" placeholder="Ej: 45231231" required>
+      <button id="btnB" class="Buscar"> Buscar</button>
+    </form>
+
+    <div id="infoAlumno" class="info-alumno"></div>
+    
+
+    <nav class="cuatrimestres">
+      <a href="#">Primer Cuatrimestre</a>
+      <a href="#">Segundo Cuatrimestre</a>
+    </nav>
+ <form id="form-notas">
+    <table>
+      <thead>
+        <tr>
+          <th>Materias</th>
+          <th>1er</th>
+          <th>2do</th>
+          <th>Nota</th>
+          <th>1er</th>
+          <th>2do</th>
+          <th>Nota</th>
+        </tr>
+      </thead>
+      <tbody id="tablaMaterias">
+        <tr><td>Hardware IV</td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td></tr>
+        <tr><td>Practicas Profesionalizantes II</td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td></tr>
+        <tr><td>Autogestion</td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td></tr>
+        <tr><td>Programación IV</td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td></tr>
+        <tr><td>Marco Juridico y D. del T.</td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td></tr>
+        <tr><td>Matematicas</td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td></tr>
+        <tr><td>Redes III</td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td></tr>
+        <tr><td>Ingles Tecnico</td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td></tr>
+        <tr><td>Asistencia</td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td><td><input type="number" min="1" max="10"></td></tr>
+      </tbody>
+    </table>
+    <!-- end of form-notas -->
+      <button type="submit" class="guardar"> Guardar Notas </button>
+    </form>
+
+    <button onclick="location.href='Inicio3.html'" class="volver-btn">Volver</button>
+    <button class="alumnos-btn">Alumnos</button>
+  </div>
+
+  <script>
+
+// Buscar alumno por DNI
+document.getElementById("buscarAlumno").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const dni = document.getElementById("dni").value;
+
+  const res = await fetch("http://localhost:3000/api/buscarAlumno", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ dni })
+  });
+
+  const data = await res.json();
+
+  if (!data.success) {
+    document.getElementById("infoAlumno").innerHTML = "<p>Alumno no encontrado</p>";
+    return;
+  }
+
+  document.getElementById("infoAlumno").innerHTML =
+    `<p><strong>Alumno:</strong> ${data.user.NombreyApellido} - Curso: ${data.user.Curso}</p>`;
+
+  window.ID_Usuarios = data.user.ID_Usuarios;
+  window.CURSO = data.user.Curso;
+});
+
+
+// Guardar notas (ahora manejado en el envío del formulario)
+const formNotas = document.getElementById("form-notas");
+formNotas.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (!window.ID_Usuarios) {
+    alert("Primero buscá un alumno");
+    return;
+  }
+
+  const filas = document.querySelectorAll("#tablaMaterias tr");
+  const notasEnviar = [];
+  let materiaId = 1;
+
+  filas.forEach(fila => {
+    const inputs = fila.querySelectorAll("input");
+
+    notasEnviar.push(
+      { ID_Usuarios: window.ID_Usuarios, ID_Materia: materiaId, Curso: window.CURSO, Periodo: "1C", Tipo_de_Nota: "1er", Nota: inputs[0].value },
+      { ID_Usuarios: window.ID_Usuarios, ID_Materia: materiaId, Curso: window.CURSO, Periodo: "1C", Tipo_de_Nota: "2do", Nota: inputs[1].value },
+      { ID_Usuarios: window.ID_Usuarios, ID_Materia: materiaId, Curso: window.CURSO, Periodo: "1C", Tipo_de_Nota: "Final", Nota: inputs[2].value },
+
+      { ID_Usuarios: window.ID_Usuarios, ID_Materia: materiaId, Curso: window.CURSO, Periodo: "2C", Tipo_de_Nota: "1er", Nota: inputs[3].value },
+      { ID_Usuarios: window.ID_Usuarios, ID_Materia: materiaId, Curso: window.CURSO, Periodo: "2C", Tipo_de_Nota: "2do", Nota: inputs[4].value },
+      { ID_Usuarios: window.ID_Usuarios, ID_Materia: materiaId, Curso: window.CURSO, Periodo: "2C", Tipo_de_Nota: "Final", Nota: inputs[5].value }
+    );
+
+    materiaId++;
+  });
+
+  try {
+    const res = await fetch("http://localhost:3000/api/guardarNotas", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ notas: notasEnviar })
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error("Error al guardar notas, respuesta del servidor:", errText);
+      alert("Ocurrió un error al guardar las notas. Revisa la consola.");
+      return;
+    }
+
+    const data = await res.json();
+    alert(data.msg);
+  } catch (err) {
+    console.error("Fallo la petición a guardarNotas:", err);
+    alert("No se pudo conectar con el servidor. Asegurate de que esté en marcha.");
+  }
+});
+</script>
+
+
+
+
+    
+    
+
+  
+</body>
+</html>

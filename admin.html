@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Administración - Boletín Digital</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <img src="Logo.png" alt="Logo" class="logo">
+    <div class="site-title">
+      <h1>Area de Administracion - Boletín Digital</h1>
+    </div>
+  </div>
+</header>
+
+<main class="admin-main">
+  <h3>Gestión de usuarios</h3>
+  <table id="usersTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Gmail</th>
+        <th>DNI</th>
+        <th>Rol</th>
+        <th>Aprobado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</main>
+
+<footer class="site-footer">
+  <p>© Boletín Digital</p>
+</footer>
+<button onclick="location.href='Inicio4.html'" class="volver-btn">Volver</button>
+<script>
+// redirect non-admin users
+if (localStorage.getItem('rol') !== 'Administrador') {
+  alert('Zona restringida, debe iniciar sesión como administrador');
+  window.location.href = 'Login.html';
+}
+
+async function fetchUsers() {
+  const res = await fetch('http://localhost:3000/api/usuarios');
+  return res.json();
+}
+
+function createRow(u) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${u.ID_Usuarios}</td>
+    <td>${u.NombreyApellido}</td>
+    <td>${u.Gmail}</td>
+    <td>${u.DNI}</td>
+    <td>
+      <select data-id="${u.ID_Usuarios}" class="role-select">
+        <option value="Estudiante" ${u.Rol==='Estudiante'?'selected':''}>Estudiante</option>
+        <option value="Dpto_Alumnados" ${u.Rol==='Dpto_Alumnados'?'selected':''}>Dpto_Alumnados</option>
+        <option value="Administrador" ${u.Rol==='Administrador'?'selected':''}>Administrador</option>
+      </select>
+    </td>
+    <td>${u.Aprobado ? 'Sí' : 'No'}</td>
+    <td>
+      <button class="approve-btn" data-id="${u.ID_Usuarios}">${u.Aprobado ? 'Desaprobar' : 'Aprobar'}</button>
+      <button class="delete-btn" data-id="${u.ID_Usuarios}">Eliminar</button>
+    </td>
+  `;
+  return tr;
+}
+
+async function reload() {
+  const users = await fetchUsers();
+  const tbody = document.querySelector('#usersTable tbody');
+  tbody.innerHTML = '';
+  users.forEach(u => {
+    tbody.appendChild(createRow(u));
+  });
+  attachHandlers();
+}
+
+function attachHandlers() {
+  document.querySelectorAll('.role-select').forEach(sel => {
+    sel.addEventListener('change', async (e) => {
+      const id = e.target.getAttribute('data-id');
+      const newRole = e.target.value;
+      await fetch(`http://localhost:3000/api/usuarios/${id}/rol`, {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ rol: newRole })
+      });
+      alert('Rol actualizado');
+      reload();
+    });
+  });
+
+  document.querySelectorAll('.approve-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const id = e.target.getAttribute('data-id');
+      const approved = btn.textContent === 'Aprobar';
+      await fetch(`http://localhost:3000/api/usuarios/${id}/aprobar`, {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ aprobado: approved })
+      });
+      reload();
+    });
+  });
+
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      const id = e.target.getAttribute('data-id');
+      if (!confirm('¿Eliminar usuario?')) return;
+      await fetch(`http://localhost:3000/api/usuarios/${id}`, { method: 'DELETE' });
+      reload();
+    });
+  });
+}
+
+
+
+// inicializar tabla
+reload();
+</script>
+
+<!-- Footer con enlaces e íconos de Instagram y Facebook -->
+	<footer class="login-footer">
+		<nav class="socials">
+			<a href="https://www.instagram.com/cpdeg_tecnica/" aria-label="instagram"> Instagram</a>
+			<a href="https://www.facebook.com/share/19qwQRQxAx/" aria-label="facebook"> Facebook</a>
+		</nav>
+	</footer>
+    
+</body>
+</html>

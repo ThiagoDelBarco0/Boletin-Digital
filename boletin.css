@@ -1,0 +1,110 @@
+body {
+  background: #2a181b;
+  color: #fff;
+  font-family: 'Montserrat', Arial, sans-serif;
+  margin: 0;
+}
+
+.container {
+  max-width: 920px;
+  margin: 36px auto;
+  padding: 28px;
+  background: #232021;
+  border-radius: 12px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 3px solid #7c2639;
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+}
+
+.logo {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #7c2639;
+  background: #fff;
+}
+
+h1 {
+  font-size: 2.3rem;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+p { margin: 14px 0 6px; font-size: 1rem; }
+
+.cuatrimestres {
+  display:flex;
+  gap: 24px;
+  margin: 10px 0 8px;
+}
+.cuatrimestres a { color:#e9dfe0; text-decoration:underline; font-size:0.98rem; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: transparent;
+  overflow: hidden;
+}
+
+th, td {
+  border: 2px solid #ffffff;
+  padding: 12px 10px;
+  font-size: 0.95rem;
+}
+
+th {
+  background: #2a181b;
+  font-weight: 600;
+  text-align: left;
+}
+
+tbody tr:hover { background: rgba(160,58,84,0.04); }
+
+.materia-destacada {
+  background: rgba(124,38,57,0.9);
+  font-weight: 700;
+  color: #fff;
+  border-left: 6px solid rgba(160,58,84,1);
+}
+
+.alumnos-btn {
+  float: right;
+  margin-top: -509px;
+  padding: 10px 26px;
+  background: #7c2639;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.alumnos-btn:hover { background: #a03a54; }
+
+.volver-btn {
+  float: right;
+  margin-top: 18px;
+  padding: 10px 26px;
+  background: #7c2639;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.volver-btn:hover { background: #a03a54; }
+
+@media (max-width: 720px) {
+  .container { padding: 14px; margin: 18px; }
+  .logo { width: 64px; height: 64px; }
+  h1 { font-size: 1.2rem; }
+  th, td { padding: 8px 6px; font-size: 0.85rem; }
+}

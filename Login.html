@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Iniciar Sesión - Boletín Digital</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+<header class="login-header">
+  <img src="Logo.png" alt="Logo" class="logo">
+  <h1>Boletín Digital</h1>
+</header>
+
+<main class="login-main">
+  <section class="login-box">
+
+    <div class="login-title">Iniciar Sesión</div>
+
+    <form class="login-form">
+
+      <!-- Inputs corregidos -->
+      <input type="email" id="gmail" placeholder="Dirección de correo electrónico" required>
+      <input type="password" id="contrasena" placeholder="Contraseña" required>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">Ingresar</button>
+      </div>
+
+      <!-- BOTÓN REGISTRARSE VISIBLE -->
+      <div class="register">
+        <a href="Registro.html" class="btn outline">Registrarse</a>
+      </div>
+
+    </form>
+
+  </section>
+</main>
+
+<footer class="login-footer">
+  <nav class="socials">
+    <a href="https://www.instagram.com/cpdeg_tecnica/">Instagram</a>
+    <a href="https://www.facebook.com/share/19qwQRQxAx/">Facebook</a>
+  </nav>
+</footer>
+
+<script>
+document.querySelector('.login-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const gmail = document.getElementById('gmail').value;
+  const contrasena = document.getElementById('contrasena').value;
+
+  try {
+    const res = await fetch('http://localhost:3000/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gmail, contrasena })
+    });
+
+    const result = await res.json();
+
+    if (!result.success) {
+      alert(result.msg || "Error al iniciar sesión");
+      return;
+    }
+
+    console.log('Respuesta del login:', result);
+
+    // guardamos el ID y rol para otras páginas
+    if (result.id !== undefined && result.id !== null) {
+      localStorage.setItem('ID_Usuarios', result.id);
+      console.log('ID guardado:', result.id);
+    } else {
+      console.warn('No se recibió un ID de usuario en la respuesta');
+    }
+
+    if (result.rol) {
+      localStorage.setItem('rol', result.rol);
+    }
+
+    //Redireccionamiento segun rol
+    if (result.rol === "Administrador") {
+      window.location.href = "admin.html";
+    } else if (result.rol === "Dpto_Alumnados") {
+      window.location.href = "Inicio3.html";
+    } else if (result.rol === "Estudiante") {
+      window.location.href = "Inicio2.html";
+    }
+
+  } catch (err) {
+    alert('Error de conexión con el servidor');
+  }
+});
+</script>
+
+</body>
+</html>

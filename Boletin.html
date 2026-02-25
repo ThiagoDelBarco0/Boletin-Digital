@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notas - Boletín Digital</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="boletin.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="logo.png" alt="Logo" class="logo" />
+      <h1>Notas - Boletín Digital</h1>
+    </header>
+
+    
+
+    <nav class="cuatrimestres">
+      <a href="#">Primer Cuatrimestre</a>
+      <a href="#">Segundo Cuatrimestre</a>
+    </nav>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Materias</th>
+          <th>1er</th>
+          <th>2do</th>
+          <th>Nota</th>
+          <th>1er</th>
+          <th>2do</th>
+          <th>Nota</th>
+        </tr>
+      </thead>
+      <tbody id="tablaMaterias">
+        <!-- filas generadas desde JS -->
+      </tbody>
+    </table>
+
+    <button onclick="location.href='Inicio2.html'" class="volver-btn">Volver</button>
+     <button class="alumnos-btn">Alumnos</button>
+  </div>
+
+ <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const id = localStorage.getItem('ID_Usuarios');
+      console.log('ID_Usuarios desde localStorage en Boletin:', id);
+      if (!id) {
+        alert('No hay sesión activa. Por favor inicia sesión primero.');
+        window.location.href = 'Login.html';
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/notasAlumno/${id}`);
+        const data = await res.json();
+        
+        if (!data.success || !data.notas || data.notas.length === 0) {
+          const tbody = document.getElementById('tablaMaterias');
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">Todavía no tenés notas cargadas.</td></tr>';
+          return;
+        }
+
+        const notas = data.notas;
+        const tbody = document.getElementById('tablaMaterias');
+        
+        // Agrupar notas por materia
+        const notasPorMateria = {};
+        notas.forEach(n => {
+          const key = n.Name_Materias;
+          if (!notasPorMateria[key]) {
+            notasPorMateria[key] = {};
+          }
+          notasPorMateria[key][`${n.Periodo}_${n.Tipo_de_Nota}`] = n.Nota;
+        });
+
+        // Crear filas (una por materia)
+        Object.keys(notasPorMateria).forEach(materia => {
+          const notas_materia = notasPorMateria[materia];
+          const tr = document.createElement('tr');
+          
+          const val = (periodo, tipo) => notas_materia[`${periodo}_${tipo}`] || '-';
+          
+          tr.innerHTML = `
+            <td>${materia}</td>
+            <td>${val('1C', '1er')}</td>
+            <td>${val('1C', '2do')}</td>
+            <td>${val('1C', 'Final')}</td>
+            <td>${val('2C', '1er')}</td>
+            <td>${val('2C', '2do')}</td>
+            <td>${val('2C', 'Final')}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('Error cargando notas en Boletin:', err);
+        const tbody = document.getElementById('tablaMaterias');
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: red;">Error al conectar con el servidor.</td></tr>';
+      }
+    });
+</script>
+
+
+</body>
+</html>

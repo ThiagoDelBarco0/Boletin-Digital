@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Boletín Digital</title>
+  <link rel="stylesheet" href="Inicio.css">
+</head>
+<body>
+  <div class="container">
+    
+  <!-- logo y título -->
+
+ <table>
+  <tr>
+    <td><img src="../Frontend/Logo.png" alt="Logo del colegio" width="120"></td>
+    <td><h1>Boletín Digital</h1></td>
+  </tr>
+ </table>
+
+
+  <!-- Bienvenida -->
+
+  <h2>¡Bienvenidos!</h2>
+
+  <!-- Mensaje de bienvenida -->
+  <div class="bienvenida">
+     <p>
+    Buenas, bienvenidos al boletín digital del Colegio Dr. Ernesto Guevara.
+    Este sistema fue creado para poder visualizar las notas de los alumnos.
+    </p>
+  </div>
+
+  <!-- Créditos -->
+  <div class="creditos">
+    <p>Desarrollado por la empresa TechnoByte.</p>
+  </div>
+
+ 
+  <!-- Créditos -->
+
+  
+
+  <!-- Botón de inicio de sesión -->
+
+  <form action="Login.html" method="get">
+    <input type="submit" value="Iniciar Sesión">
+
+  </form>
+
+  <!-- Redes sociales -->
+
+  
+
+  </div>
+
+  <footer class="login-footer">
+    <nav class="socials">
+      <a href="https://www.instagram.com/cpdeg_tecnica/" aria-label="instagram"> instagram
+        
+      </a>
+      <a 
+      href="https://www.facebook.com/share/19qwQRQxAx/" aria-label="facebook"> Facebook
+      </a>
+    </nav>
+  </footer>
+
+ 
+<script>
+// Script para login
+if (document.querySelector('.login-form')) {
+	document.querySelector('.login-form').addEventListener('submit', async function(e) {
+		e.preventDefault();
+		const form = e.target;
+		const data = {
+			email: form.email.value,
+			password: form.password.value
+		};
+		try {
+			const res = await fetch('http://localhost:2204/api/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(data)
+			});
+			const result = await res.json();
+			if (result.success) {
+				document.getElementById('login-msg').textContent = '¡Bienvenido, ' + result.user.nombre + '!';
+				// Aquí puedes redirigir a otra página si lo deseas
+			} else {
+				document.getElementById('login-msg').textContent = 'Error: ' + result.message;
+			}
+		} catch (error) {
+			document.getElementById('login-msg').textContent = 'Error en la conexión';
+		}
+	});
+}
+</script>
+
+</body>
+</html>

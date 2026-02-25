@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<!-- Metadatos básicos y enlace al CSS externo -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Registro - Boletín Digital</title>
+	<!-- Se conecta el archivo de estilos principal para esta página -->
+	<link rel="stylesheet" href="registro.css">
+</head>
+<body>
+	<!-- Cabecera superior con logo y títulos -->
+	<header class="site-header">
+		<div class="header-inner">
+			<!-- Logo de la institución -->
+			<img src="Logo.png" alt="Logo" class="logo">
+			<!-- Título principal y subtítulo -->
+			<div class="site-title">
+				<h1>Boletín Digital</h1>
+				<h2>Registro</h2>
+			</div>
+		</div>
+	</header>
+
+	<!-- Contenido principal: tarjeta con formulario de registro -->
+	<main class="registro-main">
+		<section class="registro-card">
+			<!-- Formulario. action="#" para desarrollo; cambiar a la URL real al integrar backend -->
+			<form class="registro-form" action="#" method="post">
+				<!-- Fila: nombre y apellido -->
+				<div class="form-row">
+					<label for="nombre">Nombre y Apellido</label>
+					<input id="NombreyApellido" name="NombreyApellido" type="text" placeholder="Escriba su nombre y apellido." required>
+				</div>
+
+				<!-- Fila: contraseña -->
+				<div class="form-row">
+				<label for="contrasena">Contraseña</label>
+				<input id="contrasena" name="contrasena" type="password" placeholder="Escriba su contraseña." required>
+				<!-- Fila: DNI -->
+				<div class="form-row">
+					<label for="dni">D.N.I</label>
+					<input id="dni" name="dni" type="text" placeholder="Escriba su D.N.I." required>
+				</div>
+
+				<!-- Fila: Gmail -->
+				<div class="form-row">
+					<label for="email">Gmail</label>
+					<input id="Gmail" name="Gmail" type="email" placeholder="Escriba su Gmail." required>
+				</div>
+
+				<!-- Fila: Ciudad -->
+				<div class="form-row">
+					<label for="ciudad">Ciudad</label>
+					<input id="Ciudad" name="ciudad" type="text" placeholder="Escriba su ciudad." required>
+				</div>
+
+				<!-- Fila doble: rol y curso (dos columnas) -->
+				<div class="form-row two-cols">
+					<div>
+						<label for="rol">Rol</label>
+						<select id="Rol" name="rol">
+							<option value="" disabled selected>Elija su Rol</option>
+							<option value="Estudiante">Estudiante</option>
+						</select>
+					</div>
+
+					<div>
+						<label for="curso">Curso</label>
+						<select id="Curso" name="curso">
+							<option value="" disabled selected>Curso</option>
+							<option value="1">7mo 1ra</option>
+							<option value="2">7mo 2da</option>
+							<option value="3">7mo 3ra</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- Botón de envío -->
+				<div class="form-row actions">
+					<button type="submit" class="btn">Cargar</button>
+				</div>
+			</form>
+		</section>
+	</main>
+
+	<!-- Pie de página simple -->
+	<footer class="site-footer">
+		<p>© Boletín Digital</p>
+	</footer>
+
+	<!-- Footer con enlaces e íconos de Instagram y Facebook -->
+	<footer class="login-footer">
+		<nav class="socials">
+			<a href="https://www.instagram.com/cpdeg_tecnica/" aria-label="instagram"> Instagram</a>
+			<a href="https://www.facebook.com/share/19qwQRQxAx/" aria-label="facebook"> Facebook</a>
+		</nav>
+	</footer>
+
+	<script>
+	// Script para enviar datos al backend y redirigir
+	const form = document.querySelector('.registro-form');
+	document.querySelector('.registro-form').addEventListener('submit', async function(e) {
+		e.preventDefault();
+		
+		const nombre = document.getElementById('NombreyApellido').value;
+		let contrasena = document.getElementById('contrasena').value;
+		const dni = document.getElementById('dni').value;
+		const gmail = document.getElementById('Gmail').value;
+		const ciudad = document.getElementById('Ciudad').value;
+		let rol = document.getElementById('Rol').value;
+		let curso = document.getElementById('Curso').value;
+
+		// ensure defaults so backend doesn't reject
+		if (!rol) rol = 'Estudiante';
+		if (!curso) curso = '1';
+
+		try {
+			const res = await fetch('http://localhost:3000/api/registro', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({nombre, contrasena, dni, gmail, ciudad, rol, curso})
+			});
+			const result = await res.json();
+			if (result.success) {
+				window.location.href = 'Login.html';
+			} else {
+				alert('Error al registrar usuario');
+			}
+		} catch (err) {
+			alert('Error de conexión con el servidor');
+		}
+	});
+	</script>
+</body>
+</html>

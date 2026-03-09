@@ -1,130 +1,139 @@
-/* Estilo general */
-
-body {
-    background-color: #1e1c1c;
-    color: white;
-    font-family: 'Montserrat', sans-serif;
-    margin: 0;
-    padding: 0;
+:root{
+--bg:#141414;
+--panel:#8b1e2b;
+--panel-dark:#6a1720;
+--text:#ffffff;
 }
 
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
+body{
+margin:0;
+font-family: 'Montserrat', sans-serif;
+background: linear-gradient(to right, #000000, #351e1e);
+color:var(--text);
+text-align:center;
 }
 
 
-/* Tabla con logo y título */
+/* HEADER */
 
-table {
-    width: 100%;
-    max-width: 900px;
-    margin: 20px auto;
-    border: 5px solid #7a232e;
-    padding: 10px;
+.header{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:20px;
+
+border:4px solid var(--panel);
+padding:25px;
+margin:30px auto;
+
+max-width:900px;
+
+border-radius:12px;
+
+background:#1b1b1b;
+
+box-shadow:0px 10px 20px rgba(0,0,0,0.5);
 }
 
-table td {
-    vertical-align: middle;
-    padding: 10px;
+.logo{
+width:90px;
+border-radius:50%;
 }
 
-h1 {
-    font-size: 2.5rem;
-    margin: 0;
+.header h1{
+font-size:40px;
+margin:0;
 }
 
-/* Bienvenida */
 
-h2 {
-    font-size: 2rem;
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 0 auto 20px; 
+/* CONTENIDO */
+
+.container{
+max-width:700px;
+margin:auto;
 }
 
-/* Párrafos descriptivos */
 
-.bienvenida {
-    max-width: 700px;
-    margin: 15px auto;
-    background-color: #7a232e;
-    padding: 15px;
-    transform: translateX(-60px);
-    border: 3px solid black;
-    font-size: 1.1rem;
+/* TARJETAS */
+
+.card{
+background:var(--panel);
+padding:25px;
+
+margin:25px auto;
+
+border-radius:10px;
+
+box-shadow:0px 6px 15px rgba(0,0,0,0.4);
+
+border:3px solid black;
+
+font-size:16px;
 }
 
-.creditos {
-    max-width: 700px;
-    margin: 15px auto;
-    background-color: #7a232e;
-    padding: -10px;
-    border: 3px solid black;
-    font-size: 1.1rem;
-    
-}
-.creditos p {
-    margin-left: 10px;
+.card.small{
+width:70%;
 }
 
-/* Botón de inicio de sesión */
 
-form input[type="submit"] {
-    background-color: #7a232e;
-    color: white;
-    border: 2px solid black;
-    padding: 10px 25px;
-    font-size: 1.2rem;
-    margin-top: 20px;
-    border-radius: 5px;
-    transform: translateX(600px);
-    cursor: pointer;
-    transition: 0.3s ease;
+/* BOTON */
+
+.btn-login{
+
+margin-top:20px;
+
+background:var(--panel-dark);
+
+color:white;
+
+border:none;
+
+padding:14px 35px;
+
+font-size:16px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+transition:0.3s;
 }
 
-form input[type="submit"]:hover {
-    background-color: #a83646;
+.btn-login:hover{
+
+background:#b72c3a;
+
+transform:scale(1.07);
+
+box-shadow:0px 5px 15px rgba(0,0,0,0.5);
 }
 
-/* Enlaces de redes sociales */
-a {
-    color: #d5aaff;
-    text-decoration: none;
-    font-weight: bold;
+
+/* FOOTER */
+
+.footer{
+
+margin-top:80px;
+
+display:flex;
+
+justify-content:space-between;
+
+max-width:900px;
+
+margin-left:auto;
+margin-right:auto;
+
+opacity:0.7;
 }
 
-a:hover {
-    text-decoration: underline;
-}
+.socials a{
 
-/* Imagen del logo */
-img {
-    border-radius: 50%;
-}
+margin-left:15px;
 
-/* Estilos para el footer y los íconos de redes sociales */
-.login-footer {
-  background: #222;
-  color: #fff;
-  text-align: center;
-  padding: 15px 0;
-  margin-top: 40px;
-}
+text-decoration:none;
 
-.socials a {
-  margin: 0 10px;
-  color: #d5aaff;
-  text-decoration: none;
-  font-weight: bold;
-}
+color:var(--panel);
 
-.socials a:hover {
-  text-decoration: underline;
-}
-
-.socials img {
-  vertical-align: middle;
-  margin-right: 5px;
+font-weight:bold;
 }

@@ -13,17 +13,18 @@
       <h1>Notas - Boletín Digital</h1>
     </header>
 
-    
+    <h2 id="alumno-info"></h2>
 
-    <nav class="cuatrimestres">
-      <a href="#">Primer Cuatrimestre</a>
-      <a href="#">Segundo Cuatrimestre</a>
-    </nav>
+    
 
     <table>
       <thead>
         <tr>
-          <th>Materias</th>
+          <th rowspan="2">Materias</th>
+          <th colspan="3">Primer Cuatrimestre</th>
+          <th colspan="3">Segundo Cuatrimestre</th>
+        </tr>
+        <tr>
           <th>1er</th>
           <th>2do</th>
           <th>Nota</th>
@@ -37,19 +38,24 @@
       </tbody>
     </table>
 
-    <button onclick="location.href='Inicio2.html'" class="volver-btn">Volver</button>
-     <button class="alumnos-btn">Alumnos</button>
+    <button onclick="location.href='Login.html'" class="volver-btn">Volver</button>
+     
   </div>
 
  <script>
     document.addEventListener('DOMContentLoaded', async () => {
       const id = localStorage.getItem('ID_Usuarios');
+      const nombre = localStorage.getItem('nombre');
       console.log('ID_Usuarios desde localStorage en Boletin:', id);
       if (!id) {
         alert('No hay sesión activa. Por favor inicia sesión primero.');
         window.location.href = 'Login.html';
         return;
       }
+
+      // Mostrar info del alumno
+      const alumnoInfo = document.getElementById('alumno-info');
+      alumnoInfo.textContent = `Alumno: ${nombre}`;
 
       try {
         const res = await fetch(`http://localhost:3000/api/notasAlumno/${id}`);
@@ -99,7 +105,12 @@
       }
     });
 </script>
-
-
+<footer class="login-footer">
+  <div class="footer-left">Desarrollado por TechnoByte</div>
+  <nav class="socials">
+    <a href="https://www.instagram.com/cpdeg_tecnica/">Instagram</a>
+    <a href="https://www.facebook.com/share/19qwQRQxAx/">Facebook</a>
+  </nav>
+</footer>
 </body>
 </html>

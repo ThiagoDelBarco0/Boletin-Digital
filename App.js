@@ -43,21 +43,39 @@ db.connect((err) => {
 
 app.post("/api/registro", (req, res) => {
   const { nombre, contrasena, dni, gmail, ciudad, rol, curso } = req.body;
+  console.log('Datos recibidos en registro:', { nombre, contrasena, dni, gmail, ciudad, rol, curso });
 
-  // by default Aprobado = 0; auto-approve administrators
-  const aprobado = rol === 'Administrador' ? 1 : 0;
+  // Mapear curso si es numérico
+  let mappedCurso = curso;
+  if (curso === '1') mappedCurso = '7mo 1ra';
+  else if (curso === '2') mappedCurso = '7mo 2da';
+  else if (curso === '3') mappedCurso = '7mo 3ra';
 
-  const sql =
-    "INSERT INTO usuarios (NombreyApellido, Contraseña, DNI, Gmail, Ciudad, Rol, Curso, Aprobado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-  db.query(
-    sql,
-    [nombre, contrasena, dni, gmail, ciudad, rol, curso, aprobado],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: err });
-      res.json({ success: true });
+  // Verificar si el DNI ya existe
+  db.query("SELECT * FROM usuarios WHERE DNI = ?", [dni], (err, result) => {
+    if (err) return res.status(500).json({ success: false, msg: err.message });
+    if (result.length > 0) {
+      return res.status(400).json({ success: false, msg: "El DNI ya está registrado. Por favor, use otro DNI." });
     }
-  );
+
+    // by default Aprobado = 0; auto-approve administrators
+    const aprobado = rol === 'Administrador' ? 1 : 0;
+
+    const sql =
+      "INSERT INTO usuarios (NombreyApellido, Contraseña, DNI, Gmail, Rol, Curso, Ciudad, Aprobado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    db.query(
+      sql,
+      [nombre, contrasena, dni, gmail, rol, mappedCurso, ciudad, aprobado],
+      (err, result) => {
+        if (err) {
+          console.log('Error en insert de usuario:', err);
+          return res.status(500).json({ success: false, msg: err.message });
+        }
+        res.json({ success: true });
+      }
+    );
+  });
 });
 
 
@@ -91,7 +109,8 @@ app.post("/api/login", (req, res) => {
         success: true,
         rol: usuario.Rol,
         nombre: usuario.NombreyApellido,
-        id: usuario.ID_Usuarios
+        id: usuario.ID_Usuarios,
+        curso: usuario.Curso
       });
     }
   );
@@ -102,7 +121,7 @@ app.post("/api/login", (req, res) => {
 // OBTENER USUARIOS (para administración)
 
 app.get('/api/usuarios', (req, res) => {
-  const sql = 'SELECT ID_Usuarios, NombreyApellido, Gmail, DNI, Rol, Curso, Ciudad, Aprobado FROM usuarios';
+  const sql = 'SELECT ID_Usuarios, NombreyApellido, Gmail, DNI, Rol, Curso, Aprobado FROM usuarios';
   db.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: err });
     res.json(results);
@@ -251,28 +270,7 @@ app.get("/api/notasAlumno/:id", (req, res) => {
   }
 });
 
- db.query("SELECT * FROM usuarios WHERE Rol = ?", ["Dpto_Alumnados"], (err, result) => {
-  if (err) {
-    console.log(err);
-    return;
-  }
-
-  if (result.length === 0) {
-    db.query(
-      "INSERT INTO usuarios (NombreyApellido, Contraseña, DNI, Gmail, Rol, Curso, Ciudad) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      ["Dpto_Alumnados", "alumnado123", "00000000", "alumnado@alumnado.com", "Dpto_Alumnados", "Admin", "Sistema"],
-      (err) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        console.log("Departamento de Alumnados creado automáticamente");
-      }
-    );
-  } else {
-    console.log("El departamento de alumnados ya existe");
-  }
-});
+ 
 
 
 //------------------------------
